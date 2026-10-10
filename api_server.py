@@ -6,7 +6,6 @@ Productionda Telegram initData tekshiruvi majburiy bo‘ladi.
 import asyncio
 import hashlib
 import hmac
-import hmac
 import json
 import os
 import time
@@ -537,19 +536,20 @@ async def create_app() -> web.Application:
     session = ClientSession(headers={"User-Agent": "cs2marketuz-miniapp/1.0"})
     market.set_session(session)
     app["session"] = session
-    try:
-        market.load_items_cache()
-        await market.refresh_items()
-        # Bot rasm katalogini bir marta yuklaydi; API faqat diskdagi yengil mappingni o‘qiydi.
-        for _ in range(60):
-            if market.load_image_cache():
-                break
-            await asyncio.sleep(1)
-    except Exception as exc:
-        print(f"market refresh skipped: {exc}")
-        if not market.ITEMS:
-            await market.load_fallback_items()
+    # Render port scan uchun app darhol listen qiladi; katalog yangilanishi fonda bajariladi.
+    market.load_items_cache()
+    market.load_image_cache()
+    if not market.ITEMS:
+        await market.load_fallback_items()
+    async def warm_market():
+        try:
+            await market.refresh_items()
+            market.load_image_cache()
+        except Exception as exc:
+            print(f"market refresh skipped: {exc}")
+    app["warm_task"] = asyncio.create_task(warm_market())
     async def cleanup(app):
+        app["warm_task"].cancel()
         await app["session"].close()
     app.on_cleanup.append(cleanup)
     return app

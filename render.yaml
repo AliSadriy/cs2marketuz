@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: cs2marketuz
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: MINIAPP_HOST
+        value: 0.0.0.0
+      - key: MINIAPP_DEV_MODE
+        value: "0"
+      - key: MARKETPLACE_TEST_MODE
+        value: "1"
+      - key: DB_PATH
+        value: /app/data/bot.db
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_ID
+        sync: false
+      - key: MINIAPP_URL
+        sync: false
+      - key: PAYMENT_WEBHOOK_SECRET
+        sync: false
+    disk:
+      name: cs2marketuz-data
+      mountPath: /app/data
+      sizeGB: 1

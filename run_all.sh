@@ -12,8 +12,12 @@ if [[ -f .env ]]; then
 fi
 
 : "${MINIAPP_HOST:=127.0.0.1}"
-: "${MINIAPP_PORT:=8080}"
+: "${MINIAPP_PORT:=${PORT:-8080}}"
 : "${MINIAPP_DEV_MODE:=0}"
+if [[ -n "${PORT:-}" ]]; then
+  MINIAPP_HOST=0.0.0.0
+  MINIAPP_PORT="$PORT"
+fi
 export MINIAPP_HOST MINIAPP_PORT MINIAPP_DEV_MODE
 
 pids=()
