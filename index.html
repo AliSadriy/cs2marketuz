@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e1118">
+  <title>CS2 MarketUZ</title>
+  <link rel="stylesheet" href="/miniapp/styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">CS2 MARKETUZ</p>
+        <h1>Skin bozorini tez tekshiring</h1>
+      </div>
+      <button class="icon-btn" id="profileBtn" aria-label="Profil">◉</button>
+    </header>
+
+    <main>
+      <section class="search-wrap">
+        <label for="searchInput">Skin qidirish</label>
+        <div class="search-box"><span>⌕</span><input id="searchInput" placeholder="AK-47 Redline, AWP Asiimov..." autocomplete="off"></div>
+      </section>
+
+      <section class="category-strip"><div class="section-head"><div><span class="eyebrow">CATALOG</span><h2>Kategoriyalar</h2></div></div><div id="categoryList" class="category-list"></div></section>
+
+      <section class="section-head"><div><span class="eyebrow">LIVE MARKET</span><h2>Eng yaxshi takliflar</h2></div><button class="text-btn" id="refreshBtn">Yangilash</button></section>
+      <div id="status" class="status">Ma’lumotlar yuklanmoqda...</div>
+      <section id="skinGrid" class="skin-grid" aria-live="polite"></section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Asosiy navigatsiya">
+      <button class="nav-item active" data-view="market"><span>⌂</span>Bozor</button>
+      <button class="nav-item" data-view="favorites"><span>☆</span>Sevimlilar</button>
+      <button class="nav-item" data-view="alerts"><span>◌</span>Signallar</button>
+      <button class="nav-item" data-view="marketplace"><span>♢</span>Savdo</button>
+      <button class="nav-item" data-view="profile"><span>◉</span>Profil</button>
+    </nav>
+  </div>
+  <dialog id="detailDialog"><button class="dialog-close" id="closeDialog">×</button><div id="detailContent"></div></dialog>
+  <script src="/miniapp/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+[Unit]
+Description=CS2MarketUZ bot and Telegram Mini App
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/cs2marketuz
+EnvironmentFile=/opt/cs2marketuz/.env
+ExecStart=/opt/cs2marketuz/run_all.sh
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
