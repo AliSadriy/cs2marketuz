@@ -6,4 +6,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 RUN chmod +x run_all.sh
 EXPOSE 8080
-CMD ["./run_all.sh"]
+CMD ["sh", "-c", "export PORT=${PORT:-10000}; export MINIAPP_HOST=0.0.0.0; export MINIAPP_PORT=${PORT}; exec ./run_all.sh"]
