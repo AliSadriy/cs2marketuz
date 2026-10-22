@@ -10,6 +10,7 @@ import html
 import logging
 import time
 from datetime import datetime
+from pathlib import Path
 
 import aiohttp
 from aiogram import BaseMiddleware, Bot, Dispatcher, F
@@ -39,6 +40,7 @@ from i18n import t, variants
 log = logging.getLogger("cs2bot")
 dp = Dispatcher()
 BOT_USERNAME = ""
+START_BANNER = Path(__file__).with_name("assets") / "cs2marketuz-start.png"
 
 
 class Form(StatesGroup):
@@ -238,9 +240,17 @@ async def cmd_start(m: Message, state: FSMContext):
     await state.clear()
     lang = await db.get_lang(m.from_user.id)
     if not lang:
-        await m.answer(t("uz", "choose_lang"), reply_markup=lang_kb())
+        await m.answer_photo(
+            BufferedInputFile(START_BANNER.read_bytes(), filename="cs2marketuz-start.png"),
+            caption=t("uz", "choose_lang"),
+            reply_markup=lang_kb(),
+        )
         return
-    await m.answer(t(lang, "welcome"), reply_markup=main_menu(lang))
+    await m.answer_photo(
+        BufferedInputFile(START_BANNER.read_bytes(), filename="cs2marketuz-start.png"),
+        caption=t(lang, "welcome"),
+        reply_markup=main_menu(lang),
+    )
 
 
 @dp.message(Command("lang"))

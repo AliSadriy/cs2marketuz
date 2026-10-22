@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0e1118">
+  <meta name="theme-color" content="#0b0d0b">
   <title>CS2 MarketUZ</title>
   <link rel="stylesheet" href="/miniapp/styles.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -11,22 +11,32 @@
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">CS2 MARKETUZ</p>
-        <h1>Skin bozorini tez tekshiring</h1>
-      </div>
+      <a class="brand" href="/" aria-label="CS2 MarketUZ bosh sahifasi"><span class="brand-mark">CS<span>2</span></span><span class="brand-name">MARKET<span>UZ</span></span></a>
       <button class="icon-btn" id="profileBtn" aria-label="Profil">◉</button>
     </header>
 
     <main>
-      <section class="search-wrap">
-        <label for="searchInput">Skin qidirish</label>
-        <div class="search-box"><span>⌕</span><input id="searchInput" placeholder="AK-47 Redline, AWP Asiimov..." autocomplete="off"></div>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="live-dot"></span> CS2 SKIN KATALOGI</p>
+          <h1>Bozorni bil.<br><span>Tanlovni qil.</span></h1>
+          <p class="hero-description">Sevimli skinlaringiz narxini kuzating. Skinport bozoridagi takliflarni so‘mda ko‘ring.</p>
+          <a class="hero-link" href="#catalog">Katalogni ko‘rish <span aria-hidden="true">↘</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true"><span class="art-orbit orbit-one"></span><span class="art-orbit orbit-two"></span><span class="art-cross">✳</span><span class="art-tag">UZ / MARKET</span><span class="art-index">01 — 26</span></div>
       </section>
 
-      <section class="category-strip"><div class="section-head"><div><span class="eyebrow">CATALOG</span><h2>Kategoriyalar</h2></div></div><div id="categoryList" class="category-list"></div></section>
+      <section class="search-wrap" aria-label="Katalog qidiruvi">
+        <label for="searchInput">Skinni tez toping</label>
+        <div class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" placeholder="AK-47 Redline, AWP Asiimov..." autocomplete="off"><span class="search-hint" aria-hidden="true">/</span></div>
+      </section>
 
-      <section class="section-head"><div><span class="eyebrow">LIVE MARKET</span><h2>Eng yaxshi takliflar</h2></div><button class="text-btn" id="refreshBtn">Yangilash</button></section>
+      <section class="category-strip" id="catalog"><div class="section-head"><div><span class="eyebrow">KO‘RIB CHIQISH</span><h2>Kategoriyalar</h2></div></div><div id="categoryList" class="category-list"></div></section>
+
+      <section class="catalog-heading">
+        <div class="section-head"><div><span class="eyebrow">SKINPORT KATALOGI</span><h2 id="catalogTitle">Skinlar katalogi</h2></div><button class="text-btn" id="refreshBtn"><span aria-hidden="true">↻</span> Yangilash</button></div>
+        <label class="sort-control"><span>Saralash</span><select id="sortSelect" aria-label="Skinlarni saralash"><option value="price-asc">Narx: arzonidan</option><option value="price-desc">Narx: qimmatidan</option><option value="name">Nom bo‘yicha</option></select></label>
+      </section>
       <div id="status" class="status">Ma’lumotlar yuklanmoqda...</div>
       <section id="skinGrid" class="skin-grid" aria-live="polite"></section>
     </main>

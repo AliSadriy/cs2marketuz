@@ -43,6 +43,21 @@ MINIAPP_DEV_MODE=1 MINIAPP_HOST=127.0.0.1 MINIAPP_PORT=8080 python api_server.py
 ```
 So'ng brauzerda `http://127.0.0.1:8080/` manzilini oching. `MINIAPP_DEV_MODE=1` faqat lokal test uchun; productionda Telegram `initData` tekshiruvi majburiy bo'lishi kerak.
 
+Windows PowerShell'da birinchi marta ishga tushirish:
+```powershell
+py -3 -m venv "$env:LOCALAPPDATA\CS2MarketUZ\venv"
+& "$env:LOCALAPPDATA\CS2MarketUZ\venv\Scripts\python.exe" -m pip install -r requirements.txt
+New-Item -ItemType Directory -Force "$env:LOCALAPPDATA\CS2MarketUZ" | Out-Null
+$env:DB_PATH = "$env:LOCALAPPDATA\CS2MarketUZ\preview.sqlite"
+$env:MINIAPP_DEV_MODE = "1"
+$env:MINIAPP_HOST = "127.0.0.1"
+$env:MINIAPP_PORT = "8080"
+& "$env:LOCALAPPDATA\CS2MarketUZ\venv\Scripts\python.exe" api_server.py
+```
+PowerShell oynasini ochiq qoldiring va `http://127.0.0.1:8080/` manziliga kiring. To'xtatish uchun `Ctrl+C`; keyingi safar virtual muhitni yaratish va paketlarni o'rnatish shart emas, faqat oxirgi olti buyruqni bajaring.
+
+Mini App katalogi mavjud bozor rasmlarini ishlatadi, narxlarni esa valyuta kursi mavjud bo‘lsa taxminiy so‘mda ham ko‘rsatadi. Skin float qiymati katalog API'sida bo‘lmagani uchun interfeys uni ko‘rsatmaydi; nomida mavjud bo‘lsa wear holatini chiqaradi. Botning `/start` xabarida `assets/cs2marketuz-start.png` banneri ishlatiladi. Profil avatari uchun `assets/cs2marketuz-avatar.png` faylini BotFather orqali alohida yuklang; bot profil rasmini o‘zi o‘zgartira olmaydi. Rasm o‘lchamlari va manba rasmlar haqidagi eslatmalar `assets/README.md` faylida.
+
 Bot menyusida Mini App tugmasini ko'rsatish uchun `.env` fayliga HTTPS manzil yozing:
 ```env
 MINIAPP_URL=https://sizning-domeningiz.example/

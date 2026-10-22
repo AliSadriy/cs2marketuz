@@ -24,6 +24,7 @@ DEV_MODE = os.getenv("MINIAPP_DEV_MODE", "1") == "1"
 HOST = os.getenv("MINIAPP_HOST", "127.0.0.1")
 PORT = int(os.getenv("MINIAPP_PORT", "8080"))
 MARKET_TEST_MODE = os.getenv("MARKETPLACE_TEST_MODE", "1") == "1"
+STATIC_ASSETS = {"app.js", "styles.css", "placeholder.svg"}
 
 
 def verify_init_data(raw: str, bot_token: str, max_age: int = 86400) -> dict | None:
@@ -67,10 +68,11 @@ async def current_user(request: web.Request) -> dict | None:
     return None
 
 
-def skin_json(name: str) -> dict:
+def skin_json(name: str, usd_uzs: float | None = None) -> dict:
     item = market.ITEMS[name]
     return {"id": market.short_id(name), "name": name, "image": market.find_image(name),
             "price": item.get("min_price"), "median": item.get("median_price"),
+            "price_uzs": round(item["min_price"] * usd_uzs) if item.get("min_price") and usd_uzs else None,
             "best_source": "Skinport", "change_24h": None, "steam": None}
 
 
@@ -83,6 +85,13 @@ async def auth(request: web.Request) -> dict:
 
 async def health(request: web.Request) -> web.Response:
     return web.json_response({"ok": True, "market_items": len(market.ITEMS), "dev_mode": DEV_MODE})
+
+
+async def miniapp_asset(request: web.Request) -> web.Response:
+    asset = request.match_info["path"]
+    if asset not in STATIC_ASSETS:
+        raise web.HTTPNotFound()
+    return web.FileResponse(ROOT / asset)
 
 
 async def skins(request: web.Request) -> web.Response:
@@ -102,7 +111,8 @@ async def skins(request: web.Request) -> web.Response:
         names = market.sort_names(names, "q")[:40]
     else:
         names = market.search(q, 40) if q else sorted(market.ITEMS, key=lambda n: market.ITEMS[n].get("quantity") or 0, reverse=True)[:40]
-    return web.json_response({"items": [skin_json(n) for n in names]})
+    rate = market.FX.get("rate")
+    return web.json_response({"items": [skin_json(n, rate) for n in names]})
 
 
 async def categories(request: web.Request) -> web.Response:
@@ -497,9 +507,9 @@ async def create_app() -> web.Application:
                 pass
         await con.commit()
     app = web.Application()
-    app.router.add_get("/", lambda r: web.FileResponse(ROOT / "miniapp/index.html"))
+    app.router.add_get("/", lambda r: web.FileResponse(ROOT / "index.html"))
     app.router.add_get("/manus-routes.json", lambda r: web.FileResponse(ROOT / "manus-routes.json"))
-    app.router.add_get("/miniapp/{path:.*}", lambda r: web.FileResponse(ROOT / "miniapp" / r.match_info["path"]))
+    app.router.add_get("/miniapp/{path:.*}", miniapp_asset)
     app.router.add_get("/api/health", health)
     app.router.add_get("/api/skins", skins)
     app.router.add_get("/api/categories", categories)
@@ -543,6 +553,7 @@ async def create_app() -> web.Application:
         await market.load_fallback_items()
     async def warm_market():
         try:
+            await market.get_usd_uzs()
             await market.refresh_items()
             market.load_image_cache()
         except Exception as exc:
